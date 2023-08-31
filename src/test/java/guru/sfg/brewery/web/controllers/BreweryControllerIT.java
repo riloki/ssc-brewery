@@ -5,10 +5,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 class BreweryControllerIT extends BaseIT {
+
+    @Test
+    void hackListBreweriesPageWithNonCustomerRole() throws Exception {
+        mockMvc.perform(get("/brewery/breweries.html").with(httpBasic("user", "password")))
+                .andExpect(status().isOk())
+                .andExpect(view().name("breweries/index"))
+                .andExpect(model().attributeExists("breweries"));
+        ;
+    }
 
     @Test
     void listBreweriesCUSTOMER() throws Exception {
